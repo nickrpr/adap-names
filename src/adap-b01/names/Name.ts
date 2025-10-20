@@ -46,7 +46,7 @@ export class Name {
     /**
      * Returns a machine-readable representation of Name instance using default control characters
      * Machine-readable means that from a data string, a Name can be parsed back in
-     * The control characters in the data string are the default characters
+     * The control characters in the data string are the default characters --> daher habe ich unten DEFAULT_DELIMETER statt this.delimeter verwendet
      */
     public asDataString(): string {
         // check whether a control character is present inside each string, and if so, escape each control character, such that they stay inside the data string and the data string gets machine readable
@@ -54,7 +54,7 @@ export class Name {
         const escapedComponents = this.components.map(component => {
             return component
                 .replaceAll(ESCAPE_CHARACTER, ESCAPE_CHARACTER + ESCAPE_CHARACTER)  // z.B.: \\ wird zu \\\\
-                .replaceAll(this.delimiter, ESCAPE_CHARACTER + this.delimiter);     // z.B.: . wird zu \.
+                .replaceAll(DEFAULT_DELIMITER, ESCAPE_CHARACTER + DEFAULT_DELIMITER);     // z.B.: . wird zu \.
         });
         return escapedComponents.join(this.delimiter);
         // throw new Error("needs implementation or deletion");
