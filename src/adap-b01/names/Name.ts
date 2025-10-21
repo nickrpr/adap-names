@@ -1,5 +1,5 @@
 export const DEFAULT_DELIMITER: string = '.';
-export const ESCAPE_CHARACTER = '\\'; // der back slash ist in javacript bereits ein escape zeichen, daher muss man hier 2 \\ machen sodass man als escape character 1 back slash zu haben
+export const ESCAPE_CHARACTER = '\\';
 
 /**
  * A name is a sequence of string components separated by a delimiter character.
@@ -29,8 +29,8 @@ export class Name {
     }
 
     /**
-     * Returns a human-readable representation of the Name instance using user-set control characters
-     * Control characters are not escaped (creating a human-readable string) // Control characters = delimiter + escape character
+     * Returns a human-readable representation of the Name instance using user-set special characters
+     * Special characters are not escaped (creating a human-readable string) // Special characters = delimiter + escape character ??
      * Users can vary the delimiter character to be used
      */
     // e.g.: const n = new Name(["oss", "cs", "fau", "de"]);
@@ -46,7 +46,7 @@ export class Name {
     /**
      * Returns a machine-readable representation of Name instance using default control characters
      * Machine-readable means that from a data string, a Name can be parsed back in
-     * The control characters in the data string are the default characters --> daher habe ich unten DEFAULT_DELIMETER statt this.delimeter verwendet
+     * The special characters in the data string are the default characters --> daher habe ich unten DEFAULT_DELIMETER statt this.delimeter verwendet
      */
     public asDataString(): string {
         // check whether a control character is present inside each string, and if so, escape each control character, such that they stay inside the data string and the data string gets machine readable
