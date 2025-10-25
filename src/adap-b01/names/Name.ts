@@ -60,6 +60,7 @@ export class Name {
         // throw new Error("needs implementation or deletion");
     }
 
+    /** Returns properly masked component string */
     public getComponent(i: number): string {
         if (i < 0 || i >= this.components.length) {
             throw new Error("Index " + i + " is out of bounds");
