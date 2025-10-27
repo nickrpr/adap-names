@@ -46,8 +46,7 @@ export class Name {
      ["oss\\", "cs", "fau\.", "de"].asString() --> Ergebnis: "oss\\.cs.fau\..de" --> im Fall von \. wird der backslash
      * entfernt, da der String so mehr human-readable ist. Der Backslash ist in diesem Fall schließlich lediglich dazu
      * da, um den Punkt zu escapen/maskieren, sodass dieser intern nicht als Trennzeichen verstanden wird. Ein
-     * Backlash ohne Punkt danach hat aber keinen Grund der Maskierung, sondern soll als Backslash in dieser Komponente
-     * bewusst so vorkommen, weshalb solche Backslashes bewusst erhalten bleiben.
+     * doppelter Backlash hintereinander wird aus gleichem Grund einmal demaskiert.
 
      * Interner Speicher (this.components): ["oss", "cs", "fau", "de"]
      * n.asString() gibt zurück: "oss.cs.fau.de"
