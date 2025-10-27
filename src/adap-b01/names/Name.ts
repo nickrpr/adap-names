@@ -21,27 +21,28 @@ export class Name {
     /** Expects that all Name components are properly masked */
     // @methodtype initialization-method
     constructor(other: string[], delimiter?: string) {
-        console.log("other:", other);
-        console.log("\\")
+        // console.log("other:", other);
+        // console.log("\\")
         this.components = other.slice();
-        console.log("components:", this.components);
-        if (delimiter) {
+
+        // console.log("components:", this.components);
+        if (delimiter !== undefined) {
             this.delimiter = delimiter;
         }
     }
 
     /**
      * Returns a human-readable representation of the Name instance using user-set special characters
-     * Special characters are not escaped (creating a human-readable string) // Special characters = delimiter + escape character ??
+     * Special characters are not escaped (creating a human-readable string) // Special characters = delimiter und escape character (genau, siehe oben)
      * Users can vary the delimiter character to be used
      */
     // e.g.: const n = new Name(["oss", "cs", "fau", "de"]);
     // n.asString(); // Ergebnis: "oss.cs.fau.de"
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        return this.components.join(delimiter); //TODO: whs muss ich das hier noch ändern und etwas maskieren, also whs noch falsch, nochmal drüber nachdenken!! wegen control chars are not escaped
+        return this.components.join(delimiter);
     }
-    // TODO: ["oss\\", "cs", "fau\.", "de"].asString() --> Ergebnis: "oss\\.cs.fau\..de" --> wäre das so korrekt?
+    //["oss\\", "cs", "fau\.", "de"].asString() --> Ergebnis: "oss\\.cs.fau\..de" --> wäre das so korrekt?
     /**
      * Interner Speicher (this.components): ["oss", "cs", "fau", "de"]
      * n.asString() gibt zurück: "oss.cs.fau.de"
@@ -55,10 +56,9 @@ export class Name {
      * Machine-readable means that from a data string, a Name can be parsed back in
      * The special characters in the data string are the default characters --> daher habe ich unten DEFAULT_DELIMETER statt this.delimeter verwendet
      */
-    // TODO: ANNNOTE EACH METHOD siehe vorlesungsfolien zu homework, also zb @methodtype create-method
     // @methodtype conversion-method
     public asDataString(): string {
-        console.log("ACHTUNG hier:", this.components);
+        // console.log(this.components);
         // check whether a control character is present inside each string, and if so, escape each control character, such that they stay inside the data string and the data string gets machine readable
         // => "fau\.de.cs" --> Der Punkt nach fau soll also kein Trennzeichen sein, sondern ist Teil der Komponente! --> also ["fau.de", "cs"]
         const escapedComponents = this.components.map(component => {
