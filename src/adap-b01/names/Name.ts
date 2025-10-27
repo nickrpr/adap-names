@@ -21,12 +21,16 @@ export class Name {
     /** Expects that all Name components are properly masked */
     // @methodtype initialization-method
     constructor(other: string[], delimiter?: string) {
+        // Do not auto-correct/mask here (as per assignment & forum answer).
+        if (!Array.isArray(other)) {
+            throw new TypeError("Name expects an array of components");
+        }
         // console.log("other:", other);
         // console.log("\\")
         this.components = other.slice();
 
         // console.log("components:", this.components);
-        if (delimiter !== undefined) {
+        if (delimiter !== undefined && delimiter !== null) {
             this.delimiter = delimiter;
         }
     }
@@ -35,20 +39,27 @@ export class Name {
      * Returns a human-readable representation of the Name instance using user-set special characters
      * Special characters are not escaped (creating a human-readable string) // Special characters = delimiter und escape character (genau, siehe oben)
      * Users can vary the delimiter character to be used
-     */
-    // e.g.: const n = new Name(["oss", "cs", "fau", "de"]);
-    // n.asString(); // Ergebnis: "oss.cs.fau.de"
-    // @methodtype conversion-method
-    public asString(delimiter: string = this.delimiter): string {
-        return this.components.join(delimiter);
-    }
-    //["oss\\", "cs", "fau\.", "de"].asString() --> Ergebnis: "oss\\.cs.fau\..de" --> wäre das so korrekt?
-    /**
+     -----------------------------------------------------------------------
+     // e.g.: const n = new Name(["oss", "cs", "fau", "de"]);
+     // n.asString(); // Ergebnis: "oss.cs.fau.de"
+     -----------------------------------------------------------------------
+     ["oss\\", "cs", "fau\.", "de"].asString() --> Ergebnis: "oss\\.cs.fau\..de" --> im Fall von \. wird der backslash
+     * entfernt, da der String so mehr human-readable ist. Der Backslash ist in diesem Fall schließlich lediglich dazu
+     * da, um den Punkt zu escapen/maskieren, sodass dieser intern nicht als Trennzeichen verstanden wird. Ein
+     * Backlash ohne Punkt danach hat aber keinen Grund der Maskierung, sondern soll als Backslash in dieser Komponente
+     * bewusst so vorkommen, weshalb solche Backslashes bewusst erhalten bleiben.
+
      * Interner Speicher (this.components): ["oss", "cs", "fau", "de"]
      * n.asString() gibt zurück: "oss.cs.fau.de"
      * n.asDataString() gibt zurück: "oss.cs.fau.de" (Hier gibt es nichts zu maskieren, da keine Sonderzeichen in den Komponenten sind).
      */
 
+    // @methodtype conversion-method
+    public asString(delimiter: string = this.delimiter): string {
+        const test =  this.components.map(component => component.replaceAll(ESCAPE_CHARACTER + this.delimiter, this.delimiter)).join(delimiter)
+        console.log(test);
+        return test;
+    }
 
 
     /**
@@ -58,15 +69,8 @@ export class Name {
      */
     // @methodtype conversion-method
     public asDataString(): string {
-        // console.log(this.components);
-        // check whether a control character is present inside each string, and if so, escape each control character, such that they stay inside the data string and the data string gets machine readable
-        // => "fau\.de.cs" --> Der Punkt nach fau soll also kein Trennzeichen sein, sondern ist Teil der Komponente! --> also ["fau.de", "cs"]
-        const escapedComponents = this.components.map(component => {
-            return component
-                .replaceAll(ESCAPE_CHARACTER, ESCAPE_CHARACTER + ESCAPE_CHARACTER)  // z.B.: \\ wird zu \\\\
-                .replaceAll(DEFAULT_DELIMITER, ESCAPE_CHARACTER + DEFAULT_DELIMITER);     // z.B.: . wird zu \.
-        });
-        return escapedComponents.join(DEFAULT_DELIMITER);
+        // da laut Konstruktor this.components bereits properly masked ist, werden hier die einzelnen Komponenten des Arrays lediglich zusammen geführt, jeweils getrennt durch den Standard-Delimeter. Dadurch bleibt es machine-readable und kann später wieder eingelesen werden.
+        return this.components.join(DEFAULT_DELIMITER);
     }
 
     /** Returns properly masked component string */
