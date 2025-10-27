@@ -56,9 +56,14 @@ export class Name {
 
     // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        const test =  this.components.map(component => component.replaceAll(ESCAPE_CHARACTER + this.delimiter, this.delimiter)).join(delimiter)
-        console.log(test);
-        return test;
+        const humanReadableComponents = this.components.map(component =>
+            component
+                // erst Maskierung des Delimiters entfernen, also "\." -> "."
+                .replaceAll(ESCAPE_CHARACTER + this.delimiter, this.delimiter)
+                // dann Maskierung des Escape Characters selbst entfernen, also "\\" -> "\"
+                .replaceAll(ESCAPE_CHARACTER + ESCAPE_CHARACTER, ESCAPE_CHARACTER)
+        );
+        return humanReadableComponents.join(delimiter);
     }
 
 
