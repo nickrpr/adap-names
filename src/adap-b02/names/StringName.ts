@@ -16,33 +16,68 @@ export class StringName implements Name {
         this.noComponents = this.splitStringInComponents(source).length;
     }
 
+    // private splitStringInComponents(source: string): string[] {
+    //     if (source === "") {
+    //         return [""];
+    //     }
+    //     // Example: source = "..." should lead to components = [[""], [""], [""], [""]] (if "." is the delimiter)
+    //     const components: string[] = [];
+    //     let currentStr = "";
+    //     let isEscaped = false;
+    //
+    //     for (const char of source) {
+    //         if (isEscaped && char === ESCAPE_CHARACTER) {
+    //             isEscaped = false;
+    //             currentStr += char;
+    //         } else if (char === ESCAPE_CHARACTER) {
+    //             isEscaped = true;
+    //             currentStr += char;
+    //         } else if (char === this.delimiter && !isEscaped) {
+    //             components.push(currentStr);
+    //             currentStr = "";
+    //             // isEscaped = false;
+    //         } else if (char === this.delimiter && isEscaped) {
+    //             isEscaped = false;
+    //             currentStr += char;
+    //         } else {
+    //             currentStr += char;
+    //         }
+    //     }
+    //
+    //     components.push(currentStr);
+    //     return components;
+    // }
     private splitStringInComponents(source: string): string[] {
         if (source === "") {
             return [""];
         }
-        // Example: source = "..." should lead to components = [[""], [""], [""], [""]] (if "." is the delimiter)
+
         const components: string[] = [];
-        let currentStr = "";
+        let current = "";
         let isEscaped = false;
 
-        for (const char of source) {
-            if (isEscaped && char === ESCAPE_CHARACTER) {
+        for (const ch of source) {
+            if (isEscaped) {
+                // ESCAPE_CHARACTER war aktiv: das aktuelle Zeichen wird übernommen
+                current += ESCAPE_CHARACTER + ch; // Backslash bleibt aber auch erhalten, da components immer noch alle Maskierungen enthalten soll
                 isEscaped = false;
-                currentStr += char;
-            } else if (char === ESCAPE_CHARACTER) {
+            } else if (ch === ESCAPE_CHARACTER) {
+                // Nächstes Zeichen wird maskiert
                 isEscaped = true;
-                currentStr += char;
-            } else if (char === this.delimiter && !isEscaped) {
-                components.push(currentStr);
-                currentStr = "";
+            } else if (ch === this.delimiter) {
+                // Trenne nur, wenn kein Escape aktiv ist
+                components.push(current);
+                current = "";
             } else {
-                currentStr += char;
+                current += ch;
             }
         }
 
-        components.push(currentStr);
+        components.push(current);
         return components;
     }
+
+
 
     public asString(delimiter: string = this.delimiter): string {
         const components = this.splitStringInComponents(this.name);
