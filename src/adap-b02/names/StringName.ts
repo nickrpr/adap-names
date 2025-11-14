@@ -129,6 +129,9 @@ export class StringName implements Name {
     }
 
     public setComponent(n: number, c: string): void {
+        if (this.noComponents === 0) {
+            throw new Error("Components have no elements, so there is nothing to set.");
+        }
         const components = this.splitStringInComponents(this.name);
 
         if (n < 0 || n >= components.length) {
@@ -141,20 +144,35 @@ export class StringName implements Name {
     }
 
     public insert(n: number, c: string): void {
-        const components = this.splitStringInComponents(this.name);
+        if (this.noComponents === 0) {
+            if (n >= 1) {
+                throw new Error("Index " + n + " is out of bounds");
+            }
 
-        if (n < 0 || n > components.length) {
-            throw new Error("Index " + n + " is out of bounds");
+            this.name = c;
+            this.noComponents = 1;
+        } else {
+
+            const components = this.splitStringInComponents(this.name);
+
+            if (n < 0 || n > components.length) {
+                throw new Error("Index " + n + " is out of bounds");
+            }
+            components.splice(n, 0, c);
+
+            this.name = components.join(this.delimiter);
+            this.noComponents = components.length;
         }
-        components.splice(n, 0, c);
-
-        this.name = components.join(this.delimiter);
-        this.noComponents = components.length;
     }
 
     public append(c: string): void {
         // I assume that the string c is still properly masked
+        if (this.noComponents === 0) { //dieser Fall tritt ein, wenn eine Namenskomponente erstellt wurde mit nur einer Komponente und dann remove(0) aufgerufen wurde. Da der Endstring nicht mit einem delimiter starten soll, wird er hier direkt zum String c.
+            this.name = c;
+        } else {
         this.name = `${this.name}${this.delimiter}${c}`;
+        }
+
         this.noComponents++;
 
         // Alternative Implementierung:
