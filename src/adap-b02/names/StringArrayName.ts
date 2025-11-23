@@ -77,7 +77,7 @@ export class StringArrayName implements Name {
     }
 
     public concat(other: Name): void {
-        for (let i = 0; i < this.components.length; i++) {
+        for (let i = 0; i < other.getNoComponents(); i++) {
             this.components.push(other.getComponent(i));
         }
     }
