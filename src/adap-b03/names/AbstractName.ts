@@ -37,6 +37,9 @@ export abstract class AbstractName implements Name {
     //     }
     //     return components.join(DEFAULT_DELIMITER);
     // } // -> diese Implementierung war etwas zu einfach gedacht für komplexere Fälle. Dazu gehören v.a. die Tests zu asDataString
+    // Beispiel:
+    // "hi\#der\.topf\\test"
+    // asDataString soll daraus machen: "hi#der\\\.topf\\test" --> auch die 3 backslashes sind wichtig, da "\." so im String vorkommen soll, daher muss der backlash selbst und danach der Punkt maskiert werden
     public asDataString(): string {
         const components: string[] = [];
         for (let i = 0; i < this.getNoComponents(); i++) {
