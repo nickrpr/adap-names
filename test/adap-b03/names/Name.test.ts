@@ -77,6 +77,7 @@ describe("Comprehensive Name Implementation Tests", () => {
 
                 n.remove(0); // remove 'a'
                 expect(n.asString()).toBe("c");
+                expect(n.isEmpty()).toBe(false);
 
                 n.remove(0); // remove 'c'
                 expect(n.isEmpty()).toBe(true);
@@ -177,7 +178,10 @@ describe("Comprehensive Name Implementation Tests", () => {
             it("should handle empty state correctly", () => {
                 // Erzeugt einen Namen mit einer leeren Komponente (wie `new StringName("")`)
                 const n = impl.create([""]);
+                console.log(n);
                 expect(n.getNoComponents()).toBe(1);
+                expect(n.isEmpty()).toBe(false);
+
 
                 n.append("test");
                 expect(n.asString()).toBe(".test");
